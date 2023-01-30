@@ -10,4 +10,6 @@ public class ShareItApp {
 		SpringApplication.run(ShareItApp.class, args);
 	}
 
+	//jdbc:h2:tcp://localhost:9092/shareit
+
 }
