@@ -7,7 +7,6 @@ import ru.practicum.shareit.user.model.User;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 
 @Getter
 @Setter
@@ -19,21 +18,20 @@ import javax.validation.constraints.Positive;
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Positive
     private Long id;
-    @Column(name = "item_name")
     @NotBlank
+    @Column(name = "item_name", length = 100, nullable = false)
     private String name;
-    @Column(name = "item_description")
     @NotBlank
+    @Column(name = "item_description", length = 600, nullable = false)
     private String description;
     @Column
     @NotNull
     private Boolean available;
     @ManyToOne
-    @JoinColumn(name = "id_owner", referencedColumnName = "user_id", nullable = false)
+    @JoinColumn(name = "id_owner", referencedColumnName = "id", nullable = false)
     private User owner;
     @ManyToOne
-    @JoinColumn(name = "request_id")
+    @JoinColumn(name = "request_id", referencedColumnName = "id")
     private ItemRequest request;
 }

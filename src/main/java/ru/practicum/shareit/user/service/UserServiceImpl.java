@@ -3,15 +3,17 @@ package ru.practicum.shareit.user.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.exception.BadRequestException;
+import ru.practicum.shareit.exception.ConflictException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-import static ru.practicum.shareit.user.dto.UserMapper.toUser;
 import static ru.practicum.shareit.user.dto.UserMapper.toUserDto;
 
 @Service
@@ -43,21 +45,42 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserDto create(UserDto userDto) {
-        User user = toUser(userDto);
-        return toUserDto(userRepository.save(user));
+    public User create(User user) {
+        try {
+            return userRepository.save(user);
+        } catch (Exception e) {
+            if(checkEmail(user.getEmail())) {
+                throw new ConflictException("Email занят.");
+            }
+            throw new BadRequestException("Данные введены неверно или заняты.");
+        }
+    }
+
+    boolean checkEmail(String email) {
+        try {
+            userRepository.findUserByEmail(email);
+            return false;
+        } catch (Exception exception) {
+            return true;
+        }
     }
 
     @Transactional
     @Override
-    public UserDto update(UserDto userDto, Long id) {
+    public UserDto update(User user, Long id) {
         User updatedUser = userRepository.findById(id).orElseThrow(()
                 -> new NotFoundException("Пользователь id: " + id + " не найден."));
-        if (userDto.getEmail() != null) {
-            updatedUser.setEmail(userDto.getEmail());
+        if (user.getEmail() != null && !user.getEmail().equals("")) {
+            if (!userRepository.findAllByIdNotAndEmail(id, user.getEmail()).isEmpty()) {
+                throw new ConflictException("Email занят.");
+            }
+            updatedUser.setEmail(user.getEmail());
         }
-        if (userDto.getName() != null) {
-            updatedUser.setName(userDto.getName());
+        if (user.getName() != null && !user.getName().equals("")) {
+            if (!userRepository.findAllByIdNotAndName(id, user.getName()).isEmpty()) {
+                throw new ConflictException("Имя занято.");
+            }
+            updatedUser.setName(user.getName());
         }
         return toUserDto(userRepository.save(updatedUser));
     }

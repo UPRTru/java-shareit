@@ -19,10 +19,10 @@ public class ItemRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotBlank
-    @Column(name = "request_description")
+    @Column(name = "request_description", length = 600, nullable = false)
     private String description;
     @ManyToOne
-    @JoinColumn(name = "requestor_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "requestor_id", referencedColumnName = "id")
     private User requestor;
     private LocalDateTime created;
 }

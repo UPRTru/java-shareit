@@ -6,7 +6,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Positive;
 
 
 @Getter
@@ -19,16 +18,15 @@ import javax.validation.constraints.Positive;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Positive
-    @Column(name = "user_id")
     private Long id;
-    @Column(name = "user_name")
+    @Column(name = "user_name", length = 50)
     @NotBlank
     @Pattern(regexp = "^[a-zA-Z0-9_]*$")
     private String name;
-    @Column(unique = true, name = "user_email")
     @Email
+    @Column(name = "user_email", unique = true, length = 50)
     @NotBlank
+    @Email(regexp = "\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*\\.\\w{2,4}")
     private String email;
 
 }

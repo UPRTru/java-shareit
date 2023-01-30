@@ -5,7 +5,6 @@ import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
 @Getter
@@ -18,17 +17,15 @@ import java.time.LocalDateTime;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Positive
-    @Column(name = "comment_id")
     private Long id;
     @NotBlank
-    @Column(name = "comment_text")
+    @Column(name = "comment_text", length = 1000, nullable = false)
     private String text;
     @ManyToOne
     @JoinColumn(name = "item_id", nullable = false)
     private Item item;
     @ManyToOne
-    @JoinColumn(name = "author_id", referencedColumnName = "user_id", nullable = false)
+    @JoinColumn(name = "author_id", referencedColumnName = "id", nullable = false)
     private User author;
     @Column
     private LocalDateTime created;
