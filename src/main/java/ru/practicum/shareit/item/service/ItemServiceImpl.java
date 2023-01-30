@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.practicum.shareit.booking.Status.*;
+import static ru.practicum.shareit.booking.Status.APPROVED;
 import static ru.practicum.shareit.booking.dto.BookingMapper.toBookingItemAndUserId;
 import static ru.practicum.shareit.item.dto.CommentMapper.toCommentDto;
 import static ru.practicum.shareit.item.dto.ItemMapper.toItem;
@@ -50,9 +50,9 @@ public class ItemServiceImpl implements ItemService {
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
         result.forEach(itemDto -> {
-            itemDto.setLastBooking(bookingRepository.findAllByItemIdOrderByStartAsc(itemDto.getId()).isEmpty()? null
+            itemDto.setLastBooking(bookingRepository.findAllByItemIdOrderByStartAsc(itemDto.getId()).isEmpty() ? null
                     : toBookingItemAndUserId(bookingRepository.findAllByItemIdOrderByStartAsc(itemDto.getId()).get(0)));
-            itemDto.setNextBooking(itemDto.getLastBooking() == null? null
+            itemDto.setNextBooking(itemDto.getLastBooking() == null ? null
                     : toBookingItemAndUserId(bookingRepository.findAllByItemIdOrderByStartDesc(itemDto.getId()).get(0)));
             itemDto.setComments(commentRepository.findAllByItemId(itemDto.getId())
                     .stream()
