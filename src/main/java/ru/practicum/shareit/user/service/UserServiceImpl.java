@@ -11,7 +11,6 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static ru.practicum.shareit.user.dto.UserMapper.toUserDto;
@@ -49,9 +48,7 @@ public class UserServiceImpl implements UserService {
         try {
             return userRepository.save(user);
         } catch (Exception e) {
-            if(checkEmail(user.getEmail())) {
-                throw new ConflictException("Email занят.");
-            }
+            if(checkEmail(user.getEmail())) throw new ConflictException("Email занят.");
             throw new BadRequestException("Данные введены неверно или заняты.");
         }
     }
