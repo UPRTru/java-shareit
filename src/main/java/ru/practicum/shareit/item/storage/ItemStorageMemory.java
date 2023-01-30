@@ -6,7 +6,7 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.*;
 
 @Component
-public class ItemStorageInMemory implements ItemStorage {
+public class ItemStorageMemory implements ItemStorage {
 
     private final Map<Long, Item> items = new HashMap<>();
 
