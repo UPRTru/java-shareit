@@ -48,17 +48,15 @@ public class UserServiceImpl implements UserService {
         try {
             return userRepository.save(user);
         } catch (Exception e) {
-            if(checkEmail(user.getEmail())) throw new ConflictException("Email занят.");
+            boolean email;
+            try {
+                userRepository.findUserByEmail(user.getEmail());
+                email = false;
+            } catch (Exception exception) {
+                email = true;
+            }
+            if (email) throw new ConflictException("Email занят.");
             throw new BadRequestException("Данные введены неверно или заняты.");
-        }
-    }
-
-    boolean checkEmail(String email) {
-        try {
-            userRepository.findUserByEmail(email);
-            return false;
-        } catch (Exception exception) {
-            return true;
         }
     }
 
