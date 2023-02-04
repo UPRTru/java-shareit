@@ -5,14 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 
 @Setter
 @Getter
-@Builder
+@Builder(toBuilder = true)
 public class UserDto {
     private Long id;
-    @NotBlank
     private String name;
     @Email
     private String email;

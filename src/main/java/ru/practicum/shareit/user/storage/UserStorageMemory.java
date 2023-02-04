@@ -6,7 +6,7 @@ import ru.practicum.shareit.user.model.User;
 import java.util.*;
 
 @Component
-public class UserStorageInMemory implements UserStorage {
+public class UserStorageMemory implements UserStorage {
     private final Map<Long, User> users = new HashMap<>();
 
     private Long id = 1L;
