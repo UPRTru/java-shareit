@@ -20,8 +20,9 @@ import static ru.practicum.shareit.booking.Status.APPROVED;
 import static ru.practicum.shareit.booking.dto.BookingMapper.*;
 
 @JsonTest
-public class BookingDtoTests {@Autowired
-JacksonTester<BookingDto> json;
+public class BookingDtoTests {
+    @Autowired
+    JacksonTester<BookingDto> json;
 
     @Test
     void testBookingDtoJson() throws Exception {

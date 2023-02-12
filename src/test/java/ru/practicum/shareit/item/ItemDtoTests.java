@@ -29,8 +29,7 @@ public class ItemDtoTests {
 
     @Test
     void testItemDtoJson() throws Exception {
-        ItemDto itemDto = ItemDto
-                .builder()
+        ItemDto itemDto = ItemDto.builder()
                 .id(1L)
                 .name("item")
                 .available(true)
