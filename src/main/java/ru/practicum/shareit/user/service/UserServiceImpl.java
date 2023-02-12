@@ -50,8 +50,8 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             boolean email;
             try {
-                userRepository.findUserByEmail(user.getEmail());
-                email = false;
+                List<User> users = userRepository.findUserByEmail(user.getEmail());
+                email = users.size() == 0;
             } catch (Exception exception) {
                 email = true;
             }

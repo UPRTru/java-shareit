@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.controller;
 
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
@@ -18,8 +19,13 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDto> getAll(@RequestHeader("X-Sharer-User-Id") Long userId) {
-        return itemService.getAll(userId);
+    public List<ItemDto> getAll(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                @RequestParam(defaultValue = "0") int from,
+                                @RequestParam(defaultValue = "10") int size) {
+        if (from < 0 || size <= 0) {
+            throw new BadRequestException("Неверные параметры.");
+        }
+        return itemService.getAll(userId, from, size);
     }
 
     @GetMapping("/{id}")
@@ -50,7 +56,12 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public List<ItemDto> search(@RequestParam String text) {
-        return itemService.search(text);
+    public List<ItemDto> search(@RequestParam String text,
+                                @RequestParam(defaultValue = "0") int from,
+                                @RequestParam(defaultValue = "10") int size) {
+        if (from < 0 || size <= 0) {
+            throw new BadRequestException("Неверные параметры.");
+        }
+        return itemService.search(text, from, size);
     }
 }

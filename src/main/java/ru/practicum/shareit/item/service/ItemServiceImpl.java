@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.service;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -13,6 +14,8 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
@@ -33,19 +36,22 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final ItemRequestRepository itemRequestRepository;
 
     public ItemServiceImpl(ItemRepository itemRepository, UserRepository userRepository,
-                           BookingRepository bookingRepository, CommentRepository commentRepository) {
+                           BookingRepository bookingRepository, CommentRepository commentRepository,
+                           ItemRequestRepository itemRequestRepository) {
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;
         this.bookingRepository = bookingRepository;
         this.commentRepository = commentRepository;
+        this.itemRequestRepository = itemRequestRepository;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<ItemDto> getAll(Long userId) {
-        List<ItemDto> result = itemRepository.findAllByOwnerId(userId)
+    public List<ItemDto> getAll(Long userId, int from, int size) {
+        List<ItemDto> result = itemRepository.findAllByOwnerId(userId, PageRequest.of(from, size))
                 .stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
@@ -88,6 +94,11 @@ public class ItemServiceImpl implements ItemService {
                 -> new NotFoundException("Пользователь id: " + userId + " не найден."));
         Item item = toItem(itemDto);
         item.setOwner(user);
+        if (itemDto.getRequestId() != null) {
+            ItemRequest itemRequest = itemRequestRepository.findById(itemDto.getRequestId())
+                    .orElseThrow(() -> new NotFoundException("Не найден запрос id: " + itemDto.getRequestId()));
+            item.setRequest(itemRequest);
+        }
         itemRepository.save(item);
         return toItemDto(item);
     }
@@ -142,12 +153,12 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<ItemDto> search(String text) {
+    public List<ItemDto> search(String text, int from, int size) {
         List<ItemDto> searchedItems = new ArrayList<>();
         if (text.isBlank()) {
             return searchedItems;
         }
-        for (Item item : itemRepository.findAll()) {
+        for (Item item : itemRepository.findItemsByNameAndDescriptionAndAvailable(text, PageRequest.of(from, size))) {
             if (isSearched(text, item)) {
                 searchedItems.add(toItemDto(item));
             }
