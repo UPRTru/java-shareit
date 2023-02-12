@@ -17,7 +17,8 @@ import java.time.LocalDateTime;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static ru.practicum.shareit.booking.Status.*;
+import static ru.practicum.shareit.booking.Status.APPROVED;
+import static ru.practicum.shareit.booking.Status.WAITING;
 
 @DataJpaTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -32,6 +33,7 @@ class BookingRepositoryTests {
     private Item item;
     private User user2;
     private Booking booking;
+
     @BeforeEach
     void init() {
         user = User.builder()
