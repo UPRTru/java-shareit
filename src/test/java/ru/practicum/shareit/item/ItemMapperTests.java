@@ -1,10 +1,6 @@
 package ru.practicum.shareit.item;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.json.JsonTest;
-import org.springframework.boot.test.json.JacksonTester;
-import org.springframework.boot.test.json.JsonContent;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Comment;
@@ -14,7 +10,6 @@ import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static ru.practicum.shareit.item.dto.CommentMapper.toComment;
@@ -22,26 +17,7 @@ import static ru.practicum.shareit.item.dto.CommentMapper.toCommentDto;
 import static ru.practicum.shareit.item.dto.ItemMapper.toItem;
 import static ru.practicum.shareit.item.dto.ItemMapper.toItemDto;
 
-@JsonTest
-public class ItemDtoTests {
-    @Autowired
-    JacksonTester<ItemDto> json;
-
-    @Test
-    void testItemDtoJson() throws Exception {
-        ItemDto itemDto = ItemDto.builder()
-                .id(1L)
-                .name("item")
-                .available(true)
-                .description("descriptionOfItem")
-                .build();
-        JsonContent<ItemDto> result = json.write(itemDto);
-        assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
-        assertThat(result).extractingJsonPathStringValue("$.name").isEqualTo("item");
-        assertThat(result).extractingJsonPathStringValue("$.description").isEqualTo("descriptionOfItem");
-        assertThat(result).extractingJsonPathBooleanValue("$.available").isTrue();
-    }
-
+public class ItemMapperTests {
     @Test
     void testItemMapper() {
         ItemRequest itemRequest = ItemRequest.builder()

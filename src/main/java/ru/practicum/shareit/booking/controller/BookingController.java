@@ -6,7 +6,7 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingItemAndUserId;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.exception.BadRequestException;
-import ru.practicum.shareit.exception.GetError;
+import ru.practicum.shareit.exception.NotFoundException;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -61,8 +61,8 @@ public class BookingController {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public GetError handleIncorrectParameterException(BadRequestException e) {
-        return new GetError(e.getMessage());
+    public NotFoundException.GetError handleIncorrectParameterException(BadRequestException e) {
+        return new NotFoundException.GetError(e.getMessage());
     }
 }
 
