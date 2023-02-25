@@ -6,7 +6,7 @@ import ru.practicum.shareit.user.model.User;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    void findUserByEmail(String email);
+    List<User> findUserByEmail(String email);
 
     List<User> findAllByIdNotAndEmail(Long id, String email);
 

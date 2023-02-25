@@ -1,4 +1,4 @@
-package ru.practicum.shareit.booking;
+package ru.practicum.shareit.booking.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -6,7 +6,7 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingItemAndUserId;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.exception.BadRequestException;
-import ru.practicum.shareit.exception.GetError;
+import ru.practicum.shareit.exception.NotFoundException;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -18,6 +18,17 @@ public class BookingController {
 
     public BookingController(BookingService bookingService) {
         this.bookingService = bookingService;
+    }
+
+    @GetMapping
+    public List<BookingDto> getAllByUser(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                         @RequestParam(defaultValue = "ALL") String state,
+                                         @RequestParam(defaultValue = "0") int from,
+                                         @RequestParam(defaultValue = "10") int size) {
+        if (from < 0 || size <= 0) {
+            throw new BadRequestException("Неверные параметры.");
+        }
+        return bookingService.getAllByUser(userId, state, from, size);
     }
 
     @PostMapping
@@ -34,14 +45,13 @@ public class BookingController {
 
     @GetMapping("/owner")
     public List<BookingDto> getAllByOwner(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                          @RequestParam(defaultValue = "ALL") String state) {
-        return bookingService.getAllByOwner(userId, state);
-    }
-
-    @GetMapping
-    public List<BookingDto> getAllByUser(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                         @RequestParam(defaultValue = "ALL") String state) {
-        return bookingService.getAllByUser(userId, state);
+                                          @RequestParam(defaultValue = "ALL") String state,
+                                          @RequestParam(defaultValue = "0") int from,
+                                          @RequestParam(defaultValue = "10") int size) {
+        if (from < 0 || size <= 0) {
+            throw new BadRequestException("Неверные параметры.");
+        }
+        return bookingService.getAllByOwner(userId, state, from, size);
     }
 
     @GetMapping("/{bookingId}")
@@ -51,8 +61,8 @@ public class BookingController {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public GetError handleIncorrectParameterException(BadRequestException e) {
-        return new GetError(e.getMessage());
+    public NotFoundException.GetError handleIncorrectParameterException(BadRequestException e) {
+        return new NotFoundException.GetError(e.getMessage());
     }
 }
 

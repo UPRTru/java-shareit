@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern;
 
 @Getter
 @Setter
-@Builder
+@Builder(toBuilder = true)
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
