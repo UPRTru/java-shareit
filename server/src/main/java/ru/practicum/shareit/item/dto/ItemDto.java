@@ -1,9 +1,7 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.booking.dto.BookingItemAndUserId;
 
 import java.util.List;
@@ -12,16 +10,17 @@ import java.util.List;
 @Setter
 @Builder(toBuilder = true)
 @EqualsAndHashCode
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemDto {
-    private Long id;
-    private String name;
-    private String description;
-    private Boolean available;
-    private Long requestId;
+    Long id;
+    String name;
+    String description;
+    Boolean available;
+    Long requestId;
 
-    private BookingItemAndUserId lastBooking;
+    BookingItemAndUserId lastBooking;
 
-    private BookingItemAndUserId nextBooking;
+    BookingItemAndUserId nextBooking;
 
-    private List<CommentDto> comments;
+    List<CommentDto> comments;
 }
